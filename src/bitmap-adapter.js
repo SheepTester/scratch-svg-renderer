@@ -8,7 +8,9 @@ class BitmapAdapter {
      * @param {?function} makeImage HTML image constructor. Tests can provide this.
      * @param {?function} makeCanvas HTML canvas constructor. Tests can provide this.
      */
-    constructor (makeImage, makeCanvas) {
+    constructor (stageWidth, stageHeight, makeImage, makeCanvas) {
+        this.stageWidth = stageWidth;
+        this.stageHeight = stageHeight;
         this._makeImage = makeImage ? makeImage : () => new Image();
         this._makeCanvas = makeCanvas ? makeCanvas : () => document.createElement('canvas');
     }
@@ -58,19 +60,17 @@ class BitmapAdapter {
      * @return {object} Array of new width, new height
      */
     getResizedWidthHeight (oldWidth, oldHeight) {
-        const STAGE_WIDTH = 480;
-        const STAGE_HEIGHT = 360;
-        const STAGE_RATIO = STAGE_WIDTH / STAGE_HEIGHT;
+        const STAGE_RATIO = this.stageWidth / this.stageHeight;
 
         // If both dimensions are smaller than or equal to corresponding stage dimension,
         // double both dimensions
-        if ((oldWidth <= STAGE_WIDTH) && (oldHeight <= STAGE_HEIGHT)) {
+        if ((oldWidth <= this.stageWidth) && (oldHeight <= this.stageHeight)) {
             return {width: oldWidth * 2, height: oldHeight * 2};
         }
 
         // If neither dimension is larger than 2x corresponding stage dimension,
         // this is an in-between image, return it as is
-        if ((oldWidth <= STAGE_WIDTH * 2) && (oldHeight <= STAGE_HEIGHT * 2)) {
+        if ((oldWidth <= this.stageWidth * 2) && (oldHeight <= this.stageHeight * 2)) {
             return {width: oldWidth, height: oldHeight};
         }
 
@@ -78,7 +78,7 @@ class BitmapAdapter {
         // Otherwise, figure out how to resize
         if (imageRatio >= STAGE_RATIO) {
             // Wide Image
-            return {width: STAGE_WIDTH * 2, height: STAGE_WIDTH * 2 / imageRatio};
+            return {width: this.stageWidth * 2, height: this.stageWidth * 2 / imageRatio};
         }
         // In this case we have either:
         // - A wide image, but not with as big a ratio between width and height,
@@ -88,7 +88,7 @@ class BitmapAdapter {
         // one of the stage dimensions, so pick the smaller of the two dimensions (to fit)
         // - A tall image
         // In any of these cases, resize the image to fit the height to double the stage height
-        return {width: STAGE_HEIGHT * 2 * imageRatio, height: STAGE_HEIGHT * 2};
+        return {width: this.stageHeight * 2 * imageRatio, height: this.stageHeight * 2};
     }
 
     /**
