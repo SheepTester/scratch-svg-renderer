@@ -8,7 +8,7 @@ class BitmapAdapter {
      * @param {?function} makeImage HTML image constructor. Tests can provide this.
      * @param {?function} makeCanvas HTML canvas constructor. Tests can provide this.
      */
-    constructor (stageWidth = 640, stageHeight = 360, makeImage, makeCanvas) {
+    constructor (makeImage, makeCanvas, stageWidth = 640, stageHeight = 360) {
         this.stageWidth = stageWidth;
         this.stageHeight = stageHeight;
         this._makeImage = makeImage ? makeImage : () => new Image();
