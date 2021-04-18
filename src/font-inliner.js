@@ -18,7 +18,8 @@ const getFonts = require('scratch-render-fonts');
  * @return {string} The svg with any needed fonts inlined
  */
 const inlineSvgFonts = function (svgString) {
-    const FONTS = getFonts();
+    // For some reason `getFonts` isn't a function but its contained object??
+    const FONTS = typeof getFonts === 'function' ? getFonts() : getFonts;
     // Make it clear that this function only operates on strings.
     // If we don't explicitly throw this here, the function silently fails.
     if (typeof svgString !== 'string') {
